@@ -87,7 +87,8 @@ while True:
         mouseClick = pygame.mouse.get_pressed()
         if sum(mouseClick) > 0:
             posX, posY = pygame.mouse.get_pos()
-            lifeX, lifeY = int(np.floor(posX / dimCW)), int(np.floor(posY / dimCH))
+            lifeX, lifeY = (int(np.floor(posX / dimCW)),
+                            int(np.floor(posY / dimCH)))
             newStateMatrix[lifeX, lifeY] = not mouseClick[2]
 
     # If it is puased do not refill for show the current state
@@ -110,6 +111,7 @@ while True:
                     pygame.draw.polygon(screen, dead_color,
                                         dots, line_width)
             else:
+                # Draw in Pause 
                 dots = [
                     ((x) * dimCW,   (y) * dimCH),
                     ((x+1) * dimCW, (y) * dimCH),
