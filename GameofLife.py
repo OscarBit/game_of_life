@@ -3,6 +3,7 @@
 import numpy as np
 import pygame
 import time
+import sys
 
 pygame.init()
 
@@ -50,34 +51,56 @@ def lifeordead(Matrix,x,y):
 ####################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~Initial system~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ####################################################################
-startMatrix[2,1] = 1
-startMatrix[2,2] = 1
-startMatrix[2,3] = 1
+startMatrix[10,1] = 1
+startMatrix[10,2] = 1
+startMatrix[10,3] = 1
+
+startMatrix[21,21] = 1
+startMatrix[22,22] = 1
+startMatrix[22,23] = 1
+startMatrix[21,23] = 1
+startMatrix[20,23] = 1
 
 ####################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~Fun begins! ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ####################################################################
+pauseExect = False
+
 while True:
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            pauseExect = not pauseExect
+
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
     if start:
         stateMatrix = np.copy(startMatrix)
         start = False
+
     newStateMatrix = np.copy(stateMatrix)
-    screen.fill(bg_color)
+    # If it is puased do not refill for show the current state
+    if not pauseExect:
+        screen.fill(bg_color)
     time.sleep(0.2)
 
     for x in range(0, nx):
         for y in range(0,ny):
-            dots = [
-                ((x) * dimCW,   (y) * dimCH),
-                ((x+1) * dimCW, (y) * dimCH),
-                ((x+1) * dimCW, (y+1) * dimCH),
-                ((x) * dimCW,   (y+1) * dimCH),
-            ]
-            newStateMatrix[x, y] = lifeordead(stateMatrix, x, y)
-            if newStateMatrix[x, y]:
-                pygame.draw.polygon(screen, live_color, dots, 0)
-            else:
-                pygame.draw.polygon(screen, dead_color,
-                                    dots, line_width)
+            if not pauseExect:
+                dots = [
+                    ((x) * dimCW,   (y) * dimCH),
+                    ((x+1) * dimCW, (y) * dimCH),
+                    ((x+1) * dimCW, (y+1) * dimCH),
+                    ((x) * dimCW,   (y+1) * dimCH),
+                ]
+                newStateMatrix[x, y] = lifeordead(stateMatrix, x, y)
+                if newStateMatrix[x, y]:
+                    pygame.draw.polygon(screen, live_color, dots, 0)
+                else:
+                    pygame.draw.polygon(screen, dead_color,
+                                        dots, line_width)
     stateMatrix = np.copy(newStateMatrix)
+
     pygame.display.flip()
