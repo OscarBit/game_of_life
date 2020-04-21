@@ -18,7 +18,7 @@ dead_color = ( 120, 120, 120 )
 live_color = ( 255, 255, 255 )
 line_width = 1
 
-N = 5
+N = 25
 nx, ny = N, N
 dimCW = width / nx
 dimCH = height / ny
@@ -63,7 +63,7 @@ while True:
         start = False
     newStateMatrix = np.copy(stateMatrix)
     screen.fill(bg_color)
-    time.sleep(0.1)
+    time.sleep(0.2)
 
     for x in range(0, nx):
         for y in range(0,ny):
@@ -80,3 +80,4 @@ while True:
                 pygame.draw.polygon(screen, dead_color,
                                     dots, line_width)
     stateMatrix = np.copy(newStateMatrix)
+    pygame.display.flip()
