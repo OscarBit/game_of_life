@@ -1,5 +1,7 @@
 # Game of Life
 
+![alt text](./image.png)
+
 **Python hooby code.**
 
 * 1. Download
@@ -16,6 +18,3 @@ python3 ./GameofLife.py
 * 5. Enjoy!
 
 The notebook code it's a simple explanation.
-
-
-![alt text](./image.png)
