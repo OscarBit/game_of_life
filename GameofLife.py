@@ -19,7 +19,7 @@ dead_color = ( 120, 120, 120 )
 live_color = ( 255, 255, 255 )
 line_width = 1
 
-N = 25
+N = 30
 nx, ny = N, N
 dimCW = width / nx
 dimCH = height / ny
@@ -90,11 +90,9 @@ while True:
             lifeX, lifeY = int(np.floor(posX / dimCW)), int(np.floor(posY / dimCH))
             newStateMatrix[lifeX, lifeY] = not mouseClick[2]
 
-
     # If it is puased do not refill for show the current state
     if not pauseExect:
         screen.fill(bg_color)
-    time.sleep(0.2)
 
     for x in range(0, nx):
         for y in range(0,ny):
@@ -111,6 +109,18 @@ while True:
                 else:
                     pygame.draw.polygon(screen, dead_color,
                                         dots, line_width)
+            else:
+                dots = [
+                    ((x) * dimCW,   (y) * dimCH),
+                    ((x+1) * dimCW, (y) * dimCH),
+                    ((x+1) * dimCW, (y+1) * dimCH),
+                    ((x) * dimCW,   (y+1) * dimCH),
+                ]
+                if newStateMatrix[x, y]:
+                    pygame.draw.polygon(screen, live_color, dots, 0)
+                else:
+                    pygame.draw.polygon(screen, dead_color,
+                                        dots, line_width)
     stateMatrix = np.copy(newStateMatrix)
-
+    time.sleep(0.1)
     pygame.display.flip()
