@@ -30,7 +30,7 @@ stateMatrix = np.zeros((nx, ny))
 #~~~~~~~~~~~~~~~~~~~~~~~~    Rules   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ####################################################################
 
-def lifeordead(Matrix,x,y):
+def lifeordead(Matrix,x,y,state):
     # Sum alive neighbors
     n_neighbors = (Matrix[(x-1) % nx,(y-1) % ny] + 
     Matrix[(x-1) % nx,(y) % ny] +
@@ -40,14 +40,14 @@ def lifeordead(Matrix,x,y):
     Matrix[(x+1) % nx,(y) % ny] +
     Matrix[(x+1) % nx,(y-1) % ny] +
     Matrix[(x) % nx,(y-1) % ny])
-    if Matrix[x, y] == 0 and n_neighbors == 3:
+    if state == 0 and n_neighbors == 3:
         return 1
-    elif Matrix[x, y] == 1 and (
+    elif state == 1 and (
         n_neighbors < 2 or n_neighbors > 3
         ):
         return 0
     else:
-        return Matrix[x, y]
+        return state
 
 ####################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~Initial system~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -93,16 +93,18 @@ while True:
     if not pauseExect:
         screen.fill(bg_color)
 
-    for (x, y), i in np.ndenumerate(stateMatrix):
+    for (x, y), value in np.ndenumerate(stateMatrix):
+        dots = [
+            ((x) * dimCW,   (y) * dimCH),
+            ((x+1) * dimCW, (y) * dimCH),
+            ((x+1) * dimCW, (y+1) * dimCH),
+            ((x) * dimCW,   (y+1) * dimCH),
+        ]
         if not pauseExect:
             # Draw
-            dots = [
-                ((x) * dimCW,   (y) * dimCH),
-                ((x+1) * dimCW, (y) * dimCH),
-                ((x+1) * dimCW, (y+1) * dimCH),
-                ((x) * dimCW,   (y+1) * dimCH),
-            ]
-            newStateMatrix[x, y] = lifeordead(stateMatrix, x, y)
+            newStateMatrix[x, y] = lifeordead(
+                stateMatrix, x, y, value,
+                )
             if newStateMatrix[x, y]:
                 pygame.draw.polygon(screen, live_color, dots, 0)
             else:
@@ -110,13 +112,7 @@ while True:
                                     dots, line_width)
         else:
             # Draw in Pause 
-            dots = [
-                ((x) * dimCW,   (y) * dimCH),
-                ((x+1) * dimCW, (y) * dimCH),
-                ((x+1) * dimCW, (y+1) * dimCH),
-                ((x) * dimCW,   (y+1) * dimCH),
-            ]
-            if newStateMatrix[x, y]:
+            if value:
                 pygame.draw.polygon(screen, live_color, dots, 0)
             else:
                 pygame.draw.polygon(screen, dead_color,
