@@ -95,34 +95,35 @@ while True:
     if not pauseExect:
         screen.fill(bg_color)
 
-    for x in range(0, nx):
-        for y in range(0,ny):
-            if not pauseExect:
-                dots = [
-                    ((x) * dimCW,   (y) * dimCH),
-                    ((x+1) * dimCW, (y) * dimCH),
-                    ((x+1) * dimCW, (y+1) * dimCH),
-                    ((x) * dimCW,   (y+1) * dimCH),
-                ]
-                newStateMatrix[x, y] = lifeordead(stateMatrix, x, y)
-                if newStateMatrix[x, y]:
-                    pygame.draw.polygon(screen, live_color, dots, 0)
-                else:
-                    pygame.draw.polygon(screen, dead_color,
-                                        dots, line_width)
+    for (x, y), i in np.ndenumerate(z):
+    #for x in range(0, nx):
+        #for y in range(0,ny):
+        if not pauseExect:
+            dots = [
+                ((x) * dimCW,   (y) * dimCH),
+                ((x+1) * dimCW, (y) * dimCH),
+                ((x+1) * dimCW, (y+1) * dimCH),
+                ((x) * dimCW,   (y+1) * dimCH),
+            ]
+            newStateMatrix[x, y] = lifeordead(stateMatrix, x, y)
+            if newStateMatrix[x, y]:
+                pygame.draw.polygon(screen, live_color, dots, 0)
             else:
-                # Draw in Pause 
-                dots = [
-                    ((x) * dimCW,   (y) * dimCH),
-                    ((x+1) * dimCW, (y) * dimCH),
-                    ((x+1) * dimCW, (y+1) * dimCH),
-                    ((x) * dimCW,   (y+1) * dimCH),
-                ]
-                if newStateMatrix[x, y]:
-                    pygame.draw.polygon(screen, live_color, dots, 0)
-                else:
-                    pygame.draw.polygon(screen, dead_color,
-                                        dots, line_width)
+                pygame.draw.polygon(screen, dead_color,
+                                    dots, line_width)
+        else:
+            # Draw in Pause 
+            dots = [
+                ((x) * dimCW,   (y) * dimCH),
+                ((x+1) * dimCW, (y) * dimCH),
+                ((x+1) * dimCW, (y+1) * dimCH),
+                ((x) * dimCW,   (y+1) * dimCH),
+            ]
+            if newStateMatrix[x, y]:
+                pygame.draw.polygon(screen, live_color, dots, 0)
+            else:
+                pygame.draw.polygon(screen, dead_color,
+                                    dots, line_width)
     stateMatrix = np.copy(newStateMatrix)
     time.sleep(0.1)
     pygame.display.flip()
