@@ -16,4 +16,6 @@ python3 ./GameofLife.py
 * 5. Enjoy!
 
 The notebook code it's a simple explanation.
+
+
 ![alt text](./image.png)
