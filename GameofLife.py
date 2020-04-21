@@ -67,6 +67,13 @@ startMatrix[20,23] = 1
 pauseExect = False
 
 while True:
+    if start:
+        stateMatrix = np.copy(startMatrix)
+        start = False
+
+    newStateMatrix = np.copy(stateMatrix)
+
+    # Events functions, PAUSE, QUIT, DRAW
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.KEYDOWN:
@@ -75,12 +82,15 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        # Three components vector (RB,SB,LB)
 
-    if start:
-        stateMatrix = np.copy(startMatrix)
-        start = False
+        mouseClick = pygame.mouse.get_pressed()
+        if sum(mouseClick) > 0:
+            posX, posY = pygame.mouse.get_pos()
+            lifeX, lifeY = int(np.floor(posX / dimCW)), int(np.floor(posY / dimCH))
+            newStateMatrix[lifeX, lifeY] = not mouseClick[2]
 
-    newStateMatrix = np.copy(stateMatrix)
+
     # If it is puased do not refill for show the current state
     if not pauseExect:
         screen.fill(bg_color)
