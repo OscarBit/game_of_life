@@ -24,11 +24,12 @@ nx, ny = N, N
 dimCW = width / nx
 dimCH = height / ny
 
-startMatrix = np.zeros((nx, ny))
-start = True
+stateMatrix = np.zeros((nx, ny))
+
 ####################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~    Rules   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ####################################################################
+
 def lifeordead(Matrix,x,y):
     # Sum alive neighbors
     n_neighbors = (Matrix[(x-1) % nx,(y-1) % ny] + 
@@ -51,15 +52,16 @@ def lifeordead(Matrix,x,y):
 ####################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~Initial system~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ####################################################################
-startMatrix[10,1] = 1
-startMatrix[10,2] = 1
-startMatrix[10,3] = 1
 
-startMatrix[21,21] = 1
-startMatrix[22,22] = 1
-startMatrix[22,23] = 1
-startMatrix[21,23] = 1
-startMatrix[20,23] = 1
+stateMatrix[10,1] = 1
+stateMatrix[10,2] = 1
+stateMatrix[10,3] = 1
+
+stateMatrix[21,21] = 1
+stateMatrix[22,22] = 1
+stateMatrix[22,23] = 1
+stateMatrix[21,23] = 1
+stateMatrix[20,23] = 1
 
 ####################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~Fun begins! ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -67,10 +69,6 @@ startMatrix[20,23] = 1
 pauseExect = False
 
 while True:
-    if start:
-        stateMatrix = np.copy(startMatrix)
-        start = False
-
     newStateMatrix = np.copy(stateMatrix)
 
     # Events functions, PAUSE, QUIT, DRAW
@@ -95,10 +93,9 @@ while True:
     if not pauseExect:
         screen.fill(bg_color)
 
-    for (x, y), i in np.ndenumerate(z):
-    #for x in range(0, nx):
-        #for y in range(0,ny):
+    for (x, y), i in np.ndenumerate(stateMatrix):
         if not pauseExect:
+            # Draw
             dots = [
                 ((x) * dimCW,   (y) * dimCH),
                 ((x+1) * dimCW, (y) * dimCH),
