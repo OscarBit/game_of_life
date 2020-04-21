@@ -6,21 +6,19 @@ import time
 
 pygame.init()
 
-width, height = 1000, 1000
+width, height = 500, 500
 screen = pygame.display.set_mode((width, height))
   
 ####################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~    Colors   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ####################################################################
 
-bg_color = 20, 20, 20
+bg_color = 60, 60, 60
 dead_color = ( 120, 120, 120 )
 live_color = ( 255, 255, 255 )
 line_width = 1
 
-screen.fill(bg_color)
-
-N = 30
+N = 5
 nx, ny = N, N
 dimCW = width / nx
 dimCH = height / ny
@@ -30,31 +28,31 @@ start = True
 ####################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~    Rules   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ####################################################################
-def lifeordead(stateMatrix,x,y):
+def lifeordead(Matrix,x,y):
     # Sum alive neighbors
-    n_neighbors = stateMatrix[(x-1) % nx,(y-1) % ny] + \
-                  stateMatrix[(x-1) % nx,(y) % ny] + \
-                  stateMatrix[(x-1) % nx,(y+1) % ny] + \
-                  stateMatrix[(x) % nx,(y+1) % ny] + \
-                  stateMatrix[(x+1) % nx,(y+1) % ny] + \
-                  stateMatrix[(x+1) % nx,(y) % ny] + \
-                  stateMatrix[(x+1) % nx,(y-1) % ny] + \
-                  stateMatrix[(x) % nx,(y-1) % ny]
-    if stateMatrix[x, y] == 0 and n_neighbors == 3:
+    n_neighbors = (Matrix[(x-1) % nx,(y-1) % ny] + 
+    Matrix[(x-1) % nx,(y) % ny] +
+    Matrix[(x-1) % nx,(y+1) % ny] +
+    Matrix[(x) % nx,(y+1) % ny] +
+    Matrix[(x+1) % nx,(y+1) % ny] +
+    Matrix[(x+1) % nx,(y) % ny] +
+    Matrix[(x+1) % nx,(y-1) % ny] +
+    Matrix[(x) % nx,(y-1) % ny])
+    if Matrix[x, y] == 0 and n_neighbors == 3:
         return 1
-    elif stateMatrix[x, y] == 1 and (
+    elif Matrix[x, y] == 1 and (
         n_neighbors < 2 or n_neighbors > 3
         ):
         return 0
     else:
-        stateMatrix[x, y]
+        return Matrix[x, y]
 
 ####################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~Initial system~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ####################################################################
-startMatrix[3,5] = 1
-startMatrix[4,5] = 1
-startMatrix[5,5] = 1
+startMatrix[2,1] = 1
+startMatrix[2,2] = 1
+startMatrix[2,3] = 1
 
 ####################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~Fun begins! ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -66,15 +64,16 @@ while True:
     newStateMatrix = np.copy(stateMatrix)
     screen.fill(bg_color)
     time.sleep(0.1)
+
     for x in range(0, nx):
         for y in range(0,ny):
-            newStateMatrix[x, y] = lifeordead(stateMatrix, x, y)
             dots = [
-                (x) * dimCW,   (y) * dimCH,
-                (x+1) * dimCW, (y) * dimCH,
-                (x+1) * dimCW, (y+1) * dimCH,
-                (x) * dimCW,   (y+1) * dimCH,
+                ((x) * dimCW,   (y) * dimCH),
+                ((x+1) * dimCW, (y) * dimCH),
+                ((x+1) * dimCW, (y+1) * dimCH),
+                ((x) * dimCW,   (y+1) * dimCH),
             ]
+            newStateMatrix[x, y] = lifeordead(stateMatrix, x, y)
             if newStateMatrix[x, y]:
                 pygame.draw.polygon(screen, live_color, dots, 0)
             else:
