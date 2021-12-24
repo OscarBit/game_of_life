@@ -31,7 +31,16 @@ stateMatrix = np.zeros((nx, ny))
 ####################################################################
 
 def lifeordead(Matrix,x,y,state):
-    # Sum alive neighbors
+    """Function to update cell state.
+    
+    Args:
+      Matrix: matrix of the system
+      x, y: coordenates of cell
+      state: 1 or 0, life or dead.
+      
+    Returns:
+      New value for state of cell x,y
+    """
     n_neighbors = (Matrix[(x-1) % nx,(y-1) % ny] + 
     Matrix[(x-1) % nx,(y) % ny] +
     Matrix[(x-1) % nx,(y+1) % ny] +
@@ -40,14 +49,16 @@ def lifeordead(Matrix,x,y,state):
     Matrix[(x+1) % nx,(y) % ny] +
     Matrix[(x+1) % nx,(y-1) % ny] +
     Matrix[(x) % nx,(y-1) % ny])
-    if state == 0 and n_neighbors == 3:
-        return 1
-    elif state == 1 and (
+    if not state and n_neighbors == 3:
+        state = 1
+    elif state and (
         n_neighbors < 2 or n_neighbors > 3
         ):
-        return 0
+        state = 0
     else:
-        return state
+        pass
+    return state
+
 
 ####################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~Initial system~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
